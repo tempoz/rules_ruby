@@ -41,6 +41,7 @@ def _expand_rbconfig(ruby, expr):
 def ruby_repository_context(repository_ctx, interpreter_path):
     interpreter_path = interpreter_path.realpath
     interpreter_name = interpreter_path.basename
+    fail(interpreter_path)
 
     rel_interpreter_path = str(interpreter_path)
     if rel_interpreter_path.startswith("/"):
