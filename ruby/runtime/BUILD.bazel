@@ -1,5 +1,10 @@
 load("@bazel_skylib//lib:selects.bzl", "selects")
 load("@bazel_skylib//rules:common_settings.bzl", "string_flag")
+load("@rules_ruby//ruby/private:constants.bzl", "get_supported_version")
+load(":version_support.bzl",
+    "SUPPORTED_MAJOR_MINOR_VERSIONS",
+    "ALL_RUBY_MAJOR_MINOR_VERSIONS",
+    "ALL_JRUBY_MAJOR_MINOR_VERSIONS")
 load("@rules_ruby//ruby/private:runtime_alias.bzl",
     _ruby_headers_alias = "ruby_headers_alias",
     _ruby_interpreter_alias = "ruby_interpreter_alias",
@@ -32,16 +37,7 @@ _ruby_interpreter_alias(
 string_flag(
     name = "version",
     build_setting_default = "system",
-    values = [
-        "system",
-        "ruby-2.5",
-        "ruby-2.6",
-        "ruby-2.7",
-        "ruby-3.0",
-        "ruby-3.1",
-        "jruby-9.2",
-        "jruby-9.3",
-    ],
+    values = ["system"] + SUPPORTED_MAJOR_MINOR_VERSIONS,
 )
 
 config_setting(
@@ -49,55 +45,19 @@ config_setting(
     flag_values = { "version" : "system" },
 )
 
+[
 config_setting(
-    name = "config_ruby-2.5.8",
-    flag_values = { "version" : "ruby-2.5" },
+    name = "config_" + get_supported_version(version),
+    flag_values = { "version" : version },
 )
+for version in SUPPORTED_MAJOR_MINOR_VERSIONS]
 
+[
 alias(
-    name = "config_ruby_25",
-    actual = ":config_ruby-2.5.8"
+    name = "config_" + version,
+    actual = ":config_" + get_supported_version(version),
 )
-
-config_setting(
-    name = "config_ruby-2.6.8",
-    flag_values = { "version" : "ruby-2.6" },
-)
-
-alias(
-    name = "config_ruby_26",
-    actual = ":config_ruby-2.6.8"
-)
-
-config_setting(
-    name = "config_ruby-2.7.5",
-    flag_values = { "version" : "ruby-2.7" },
-)
-
-alias(
-    name = "config_ruby_27",
-    actual = ":config_ruby-2.7.5"
-)
-
-config_setting(
-    name = "config_ruby-3.0.3",
-    flag_values = { "version" : "ruby-3.0" },
-)
-
-alias(
-    name = "config_ruby_30",
-    actual = ":config_ruby-3.0.3"
-)
-
-config_setting(
-    name = "config_ruby-3.1.1",
-    flag_values = { "version" : "ruby-3.1" },
-)
-
-alias(
-    name = "config_ruby_31",
-    actual = ":config_ruby-3.1.1"
-)
+for version in SUPPORTED_MAJOR_MINOR_VERSIONS]
 
 selects.config_setting_group(
     name = "config_system_ruby",
@@ -109,34 +69,8 @@ selects.config_setting_group(
 
 selects.config_setting_group(
     name = "config_ruby",
-    match_any = [
-        ":config_system_ruby",
-        ":config_ruby_25",
-        ":config_ruby_26",
-        ":config_ruby_27",
-        ":config_ruby_30",
-        ":config_ruby_31",
-    ],
-)
-
-config_setting(
-    name = "config_jruby-9.2.21.0",
-    flag_values = { "version" : "jruby-9.2" },
-)
-
-alias(
-    name = "config_jruby_92",
-    actual = ":config_jruby-9.2.21.0"
-)
-
-config_setting(
-    name = "config_jruby-9.3.6.0",
-    flag_values = { "version" : "jruby-9.3" },
-)
-
-alias(
-    name = "config_jruby_93",
-    actual = ":config_jruby-9.3.6.0"
+    match_any = [":config_system_ruby"] +
+        [":config_%s" % v for v in ALL_RUBY_MAJOR_MINOR_VERSIONS],
 )
 
 selects.config_setting_group(
@@ -149,9 +83,6 @@ selects.config_setting_group(
 
 selects.config_setting_group(
     name = "config_jruby",
-    match_any = [
-        ":config_system_jruby",
-        ":config_jruby_92",
-        ":config_jruby_93",
-    ],
+    match_any = [":config_system_ruby"] +
+        [":config_%s" % v for v in ALL_JRUBY_MAJOR_MINOR_VERSIONS],
 )

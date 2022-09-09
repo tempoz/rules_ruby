@@ -1,20 +1,13 @@
 load("@rules_ruby//ruby/private/toolchains:ruby_runtime.bzl", "ruby_runtime")
-load (":constants.bzl", "SUPPORTED_VERSIONS")
+load (":constants.bzl", "get_supported_version")
 
 def _register_toolchain(version):
     """Registers ruby toolchains in the WORKSPACE file."""
     name = "local_config_ruby_%s" % version
-    supported_version = None
 
-    if version.startswith("ruby-"):
-        version = version[5:]
-    for v in sorted(SUPPORTED_VERSIONS, reverse=True):
-        if v.startswith(version):
-            supported_version = v
-            break
-
-    if not supported_version:
-        fail("rules_ruby_register_toolchains: unsupported ruby version '%s' not in '%s'" % (version, SUPPORTED_VERSIONS))
+    supported_version = get_supported_version(version)
+    if supported_version.startswith("ruby-"):
+        supported_version = supported_version[5:]
 
     ruby_runtime(
         name = name,
@@ -38,9 +31,9 @@ def rules_ruby_register_toolchains(versions = []):
     based on the //ruby/runtime:version flag setting.
 
     For example,
-        rules_ruby_register_toolchains(["system", "ruby-2.5", "jruby-9.2"])`
-    will download and build the latest supported version of Ruby 2.5 and jruby
-    9.2.  By default, the system ruby will be used for all Bazel build and
+        rules_ruby_register_toolchains(["system", ruby-2.5", "jruby-9.2"])` will
+    download and build the latest supported version of Ruby 2.5 and jruby 9.2.
+    By default, the system ruby will be used for all Bazel build and
     tests.  However, passing a flag such as:
         --@rules_ruby//ruby/runtime:version="ruby-2.5"
     will select the Ruby 2.5 installation.
@@ -51,6 +44,9 @@ def rules_ruby_register_toolchains(versions = []):
     for version in versions:
         _register_toolchain(version)
 
+    # Always provide a system toolchain for internal use.
+    if not "system" in version:
+        _register_toolchain("system")
     native.bind(
         name = "rules_ruby_system_jruby_implementation",
         actual = "@local_config_ruby_system//:jruby_implementation"

@@ -156,14 +156,46 @@ GEMSPEC_ATTRS = {
     ),
 }
 
+# The full list of supported pinned version numbers.
 SUPPORTED_VERSIONS = [
     "system",
-    "2.5.8",
-    "2.6.8",
-    "2.7.5",
-    "3.0.3",
-    "3.1.1",
+    "ruby-2.5.8",
+    "ruby-2.5.9",
+    "ruby-2.6.3",
+    "ruby-2.6.4",
+    "ruby-2.6.5",
+    "ruby-2.6.6",
+    "ruby-2.6.7",
+    "ruby-2.6.8",
+    "ruby-2.6.9",
+    "ruby-2.7.1",
+    "ruby-2.7.2",
+    "ruby-2.7.3",
+    "ruby-2.7.4",
+    "ruby-2.7.5",
+    "ruby-3.0.0",
+    "ruby-3.0.1",
+    "ruby-3.0.2",
+    "ruby-3.0.3",
+    "ruby-3.1.0",
+    "ruby-3.1.1",
     "jruby-9.2.21.0", # Corresponded to 2.5.8
     "jruby-9.3.6.0", # Corresponds to 2.6.8
 ]
 
+def get_supported_version(version):
+    """Transforms a user-friendly version identifier to a full version number."""
+
+    if version[0] >= "0" and version[1] <= "9":
+        version = "ruby-" + version
+
+    supported_version = None
+    for v in sorted(SUPPORTED_VERSIONS, reverse=True):
+        if v.startswith(version):
+            supported_version = v
+            break
+
+    if not supported_version:
+        fail("rules_ruby_register_toolchains: unsupported ruby version '%s' not in '%s'" % (version, SUPPORTED_VERSIONS))
+
+    return supported_version
