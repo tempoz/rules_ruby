@@ -9,7 +9,7 @@ local_repository(
 
 load("@rules_ruby//ruby:deps.bzl", "rules_ruby_dependencies", "rules_ruby_register_toolchains")
 rules_ruby_dependencies()
-rules_ruby_register_toolchains("3.0.2")
+rules_ruby_register_toolchains("3.0")
 
 load("@rules_ruby//ruby:defs.bzl", "ruby_bundle")
 

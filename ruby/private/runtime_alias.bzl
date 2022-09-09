@@ -38,3 +38,35 @@ ruby_headers_alias = rule(
         ),
     },
 )
+
+def _ruby_interpreter_alias_impl(ctx):
+    runtime = ctx.attr.runtime[RubyRuntimeToolchainInfo]
+    target = runtime.interpreter
+    output = ctx.actions.declare_file("ruby_interpreter")
+    #fail(target[DefaultInfo].files_to_run.executable)
+    ctx.actions.symlink(
+        output = output,
+        target_file = target[DefaultInfo].files_to_run.executable,
+        is_executable = True,
+    )
+    runfiles = ctx.attr.runtime[DefaultInfo].default_runfiles.merge(
+        ctx.attr.runtime[DefaultInfo].data_runfiles)
+
+    return [
+        DefaultInfo(
+            files = target.files,
+            runfiles = runfiles,
+            executable = output
+        ),
+    ]
+
+ruby_interpreter_alias = rule(
+    implementation = _ruby_interpreter_alias_impl,
+    executable = True,
+    attrs = {
+        "runtime": attr.label(
+            doc = "The runtime alias to use.",
+            mandatory = True,
+        ),
+    },
+)

@@ -6,7 +6,8 @@ def _register_toolchain(version):
     name = "local_config_ruby_%s" % version
     supported_version = None
 
-    version = version.removeprefix("ruby-")
+    if version.startswith("ruby-"):
+        version = version[5:]
     for v in sorted(SUPPORTED_VERSIONS, reverse=True):
         if v.startswith(version):
             supported_version = v

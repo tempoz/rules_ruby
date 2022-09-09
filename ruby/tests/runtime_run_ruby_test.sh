@@ -1,2 +1,2 @@
 #!/bin/sh -e
-external/ruby-system/ruby_bin $*
+ruby/runtime/ruby_interpreter $*

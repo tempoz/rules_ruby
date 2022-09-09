@@ -87,11 +87,10 @@ def ruby_binary_macro(ctx, main, srcs):
 
     info = DefaultInfo(
         executable = executable,
-        runfiles = deps.default_files.merge_all([
-            deps.data_files,
-            interpreter_runfiles,
-            ctx.runfiles(files = [wrapper]),
-        ]),
+        runfiles = deps.default_files
+            .merge(deps.data_files)
+            .merge(interpreter_runfiles)
+            .merge(ctx.runfiles(files = [wrapper])),
     )
 
     return [info]
