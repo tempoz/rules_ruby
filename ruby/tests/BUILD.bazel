@@ -83,8 +83,8 @@ genrule(
     output_to_bindir = 1,
     tools = [
         "args_check.rb",
-        "@rules_ruby//ruby/runtime:interpreter",
         "@rules_ruby//ruby/runtime",
+        "@rules_ruby//ruby/runtime:interpreter",
     ],
 )
 

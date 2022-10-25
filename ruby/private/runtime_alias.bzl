@@ -43,6 +43,7 @@ def _ruby_interpreter_alias_impl(ctx):
     runtime = ctx.attr.runtime[RubyRuntimeToolchainInfo]
     target = runtime.interpreter
     output = ctx.actions.declare_file("ruby_interpreter")
+
     #fail(target[DefaultInfo].files_to_run.executable)
     ctx.actions.symlink(
         output = output,
@@ -50,13 +51,14 @@ def _ruby_interpreter_alias_impl(ctx):
         is_executable = True,
     )
     runfiles = ctx.attr.runtime[DefaultInfo].default_runfiles.merge(
-        ctx.attr.runtime[DefaultInfo].data_runfiles)
+        ctx.attr.runtime[DefaultInfo].data_runfiles,
+    )
 
     return [
         DefaultInfo(
             files = target.files,
             runfiles = runfiles,
-            executable = output
+            executable = output,
         ),
     ]
 

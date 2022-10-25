@@ -179,8 +179,8 @@ SUPPORTED_VERSIONS = [
     "ruby-3.0.3",
     "ruby-3.1.0",
     "ruby-3.1.1",
-    "jruby-9.2.21.0", # Corresponded to 2.5.8
-    "jruby-9.3.6.0", # Corresponds to 2.6.8
+    "jruby-9.2.21.0",  # Corresponded to 2.5.8
+    "jruby-9.3.6.0",  # Corresponds to 2.6.8
 ]
 
 def get_supported_version(version):
@@ -190,7 +190,7 @@ def get_supported_version(version):
         version = "ruby-" + version
 
     supported_version = None
-    for v in sorted(SUPPORTED_VERSIONS, reverse=True):
+    for v in sorted(SUPPORTED_VERSIONS, reverse = True):
         if v.startswith(version):
             supported_version = v
             break

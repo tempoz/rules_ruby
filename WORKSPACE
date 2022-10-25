@@ -13,7 +13,11 @@ load("@bazel_skylib//lib:versions.bzl", "versions")
 versions.check("3.4.1")
 
 load("@rules_ruby//ruby:deps.bzl", "rules_ruby_register_toolchains")
-rules_ruby_register_toolchains(["ruby-3.0", "jruby-9.2"])
+
+rules_ruby_register_toolchains([
+    "ruby-3.0",
+    "jruby-9.2",
+])
 
 local_repository(
     name = "rules_ruby_ruby_tests_testdata_another_workspace",

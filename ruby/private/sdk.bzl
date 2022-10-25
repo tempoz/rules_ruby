@@ -1,5 +1,5 @@
 load("@rules_ruby//ruby/private/toolchains:ruby_runtime.bzl", "ruby_runtime")
-load (":constants.bzl", "get_supported_version")
+load(":constants.bzl", "get_supported_version")
 
 def _register_toolchain(version):
     """Registers ruby toolchains in the WORKSPACE file."""
@@ -49,9 +49,9 @@ def rules_ruby_register_toolchains(versions = []):
         _register_toolchain("system")
     native.bind(
         name = "rules_ruby_system_jruby_implementation",
-        actual = "@local_config_ruby_system//:jruby_implementation"
+        actual = "@local_config_ruby_system//:jruby_implementation",
     )
     native.bind(
         name = "rules_ruby_system_interpreter",
-        actual = "@local_config_ruby_system//:ruby"
+        actual = "@local_config_ruby_system//:ruby",
     )

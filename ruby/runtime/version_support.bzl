@@ -1,14 +1,16 @@
 load("@bazel_skylib//lib:new_sets.bzl", "sets")
-load("@rules_ruby//ruby/private:constants.bzl", "SUPPORTED_VERSIONS",
+load(
+    "@rules_ruby//ruby/private:constants.bzl",
+    "SUPPORTED_VERSIONS",
 )
 
 def _major_minor_versions():
     """Filters supported versions to unique major/minor pairs"""
     versions = sets.make()
     for s in SUPPORTED_VERSIONS:
-        if s.find('.') < 0:
+        if s.find(".") < 0:
             continue
-        split = s.find('.', s.find('.')+1)
+        split = s.find(".", s.find(".") + 1)
         sets.insert(versions, s[0:split])
     return sorted(sets.to_list(versions))
 

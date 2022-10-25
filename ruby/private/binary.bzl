@@ -47,7 +47,7 @@ def ruby_binary_macro(ctx, main, srcs):
         )
 
     executable = ctx.actions.declare_file(ctx.attr.name)
-    wrapper = ctx.actions.declare_file(ctx.attr.name+"_wrapper")
+    wrapper = ctx.actions.declare_file(ctx.attr.name + "_wrapper")
 
     deps = _transitive_deps(
         ctx,
@@ -73,7 +73,7 @@ def ruby_binary_macro(ctx, main, srcs):
             "{gems_to_pristine}": " ".join(gems_to_pristine),
         },
     )
-    
+
     ctx.actions.expand_template(
         template = ctx.file._runner_template,
         output = executable,
