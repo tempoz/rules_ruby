@@ -220,7 +220,7 @@ def ruby_bundle_impl(ctx, ruby_interpreter):
     generate_bundle_build_file(runtime_ctx, result)
 
 def _system_ruby_bundle_impl(ctx):
-    ruby_bundle_impl(ctx, ctx.path("@local_config_ruby_system//:ruby"))
+    ruby_bundle_impl(ctx, ctx.path(Label("@local_config_ruby_system//:ruby")))
 
 system_ruby_bundle = repository_rule(
     implementation = _system_ruby_bundle_impl,
