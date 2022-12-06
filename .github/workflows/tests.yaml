@@ -22,4 +22,4 @@ jobs:
       - name: Run Setup
         run: cd ${{ github.workspace }} && sudo bin/setup
       - name: Run Bazel Tests
-        run: cd ${{ github.workspace }} && bin/test-suite
+        run: cd ${{ github.workspace }} && sudo bin/test-suite
