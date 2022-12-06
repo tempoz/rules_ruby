@@ -14,8 +14,8 @@ load(
 )
 load(
     "@rules_ruby//ruby/private/bundle:def.bzl",
-    _bundle = "bundle_install",
-    _ruby_bundle = "ruby_bundle_install",
+    _bundle_install = "bundle_install",
+    _system_ruby_bundle = "system_ruby_bundle",
 )
 load(
     "@rules_ruby//ruby/private:rspec.bzl",
@@ -39,8 +39,8 @@ ruby_binary = _binary
 ruby_test = _test
 ruby_rspec_test = _rspec_test
 ruby_rspec = _rspec
-ruby_bundle = _ruby_bundle
-ruby_bundle_install = _bundle
+ruby_bundle_install = _bundle_install
 ruby_rubocop = _rubocop
 ruby_gemspec = _gemspec
 ruby_gem = _gem
+system_ruby_bundle = _system_ruby_bundle

@@ -44,9 +44,6 @@ def rules_ruby_register_toolchains(versions = []):
     for version in versions:
         _register_toolchain(version)
 
-    # Always provide a system toolchain for internal use.
-    if not "system" in version:
-        _register_toolchain("system")
     native.bind(
         name = "rules_ruby_system_jruby_implementation",
         actual = "@local_config_ruby_system//:jruby_implementation",

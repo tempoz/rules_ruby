@@ -15,6 +15,7 @@ versions.check("3.4.1")
 load("@rules_ruby//ruby:deps.bzl", "rules_ruby_register_toolchains")
 
 rules_ruby_register_toolchains([
+    "system",
     "ruby-3.0",
     "jruby-9.2",
 ])
@@ -100,9 +101,9 @@ container_pull(
     repository = "library/ruby",
 )
 
-load("@rules_ruby//ruby:defs.bzl", "ruby_bundle")
+load("@rules_ruby//ruby:defs.bzl", "system_ruby_bundle")
 
-ruby_bundle(
+system_ruby_bundle(
     name = "bundle",
     bundler_version = "2.1.4",
     excludes = {

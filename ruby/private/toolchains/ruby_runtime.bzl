@@ -86,6 +86,24 @@ filegroup(
 )
 """
 
+_bundle_bzl = """
+load("{rules_ruby_workspace}//ruby/private/bundle:def.bzl", "ruby_bundle_impl")
+load("{rules_ruby_workspace}//ruby/private:constants.bzl", "BUNDLE_ATTRS")
+
+def _ruby_bundle_impl(ctx):
+    ruby_bundle_impl(ctx, "{interpreter}")
+
+ruby_bundle = repository_rule(
+    implementation = _ruby_bundle_impl,
+    attrs = BUNDLE_ATTRS,
+)
+"""
+
+_mock_bundle_bzl = """
+def ruby_bundle(**kwargs):
+    print("WARNING: no system ruby found for bundle")
+"""
+
 def _install_ruby_version(ctx, version):
     ctx.download_and_extract(
         url = "https://github.com/rbenv/ruby-build/archive/refs/tags/v20220825.tar.gz",
@@ -218,7 +236,7 @@ def system_ruby_is_correct_version(ctx, version):
 def _ruby_runtime_impl(ctx):
     # If the current version of ruby is correct use that
     version = ctx.attr.version
-    if version == "system" or system_ruby_is_correct_version(ctx, version):
+    if version == "system": # or system_ruby_is_correct_version(ctx, version):
         interpreter_path = ctx.which("ruby")
     else:
         _install_ruby_version(ctx, version)
@@ -240,6 +258,10 @@ def _ruby_runtime_impl(ctx):
             version = ruby_version,
             setting = "config_system" if version == "system" else "config_%s-%s" % (ruby_impl, ruby_version),
         )
+        bundle_bzl = _bundle_bzl.format(
+            interpreter = ruby.interpreter_realpath,
+            rules_ruby_workspace = RULES_RUBY_WORKSPACE_NAME,
+        )
     else:
         print("WARNING: no system ruby available, builds against system ruby will fail")
         support = "none"
@@ -248,6 +270,7 @@ def _ruby_runtime_impl(ctx):
             rules_ruby_workspace = RULES_RUBY_WORKSPACE_NAME
         )
         ctx.file("ruby", content = "", executable = True)
+        bundle_bzl = _mock_bundle_bzl
 
     ctx.template(
         "BUILD.bazel",
@@ -258,6 +281,7 @@ def _ruby_runtime_impl(ctx):
         },
         executable = False,
     )
+    ctx.file("bundle.bzl", bundle_bzl)
 
 ruby_runtime = repository_rule(
     implementation = _ruby_runtime_impl,
