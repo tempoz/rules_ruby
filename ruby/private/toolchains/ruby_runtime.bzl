@@ -240,7 +240,7 @@ def _ruby_runtime_impl(ctx):
             version = ruby_version,
             setting = "config_system" if version == "system" else "config_%s-%s" % (ruby_impl, ruby_version),
         )
-        register_bzl = _register_bzl
+        register_bzl = _register_bzl.format(ctx.name)
     else:
         print("WARNING: no system ruby available, builds against system ruby will fail")
         support = "none"
