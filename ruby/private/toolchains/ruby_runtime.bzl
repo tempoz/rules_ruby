@@ -1,6 +1,91 @@
 load("//ruby/private:constants.bzl", "RULES_RUBY_WORKSPACE_NAME")
 load("//ruby/private/toolchains:repository_context.bzl", "ruby_repository_context")
 
+_mock_toolchain = """
+sh_binary(
+    name = "ruby_bin",
+    srcs = ["ruby"],
+    data = [":runtime"],
+)
+
+cc_import(
+    name = "libruby",
+    hdrs = [],
+)
+
+cc_library(
+    name = "headers",
+    hdrs = [],
+    includes = [],
+)
+
+filegroup(
+    name = "runtime",
+    srcs = [],
+)
+"""
+
+_toolchain = """
+load(
+    "{rules_ruby_workspace}//ruby:defs.bzl",
+    "ruby_toolchain",
+)
+
+ruby_toolchain(
+    name = "toolchain",
+    interpreter = "//:ruby_bin",
+    rules_ruby_workspace = "{rules_ruby_workspace}",
+    runtime = "//:runtime",
+    headers = "//:headers",
+    target_settings = [
+        "{rules_ruby_workspace}//ruby/runtime:{setting}"
+    ],
+    # TODO(yugui) Extract platform info from RbConfig
+    # exec_compatible_with = [],
+    # target_compatible_with = [],
+)
+
+sh_binary(
+    name = "ruby_bin",
+    srcs = ["ruby"],
+    data = [":runtime"],
+)
+
+cc_import(
+    name = "libruby",
+    hdrs = glob({hdrs}),
+    shared_library = {shared_library},
+    static_library = {static_library},
+)
+
+cc_library(
+    name = "headers",
+    hdrs = glob({hdrs}),
+    includes = {includes},
+)
+
+filegroup(
+    name = "runtime",
+    srcs = glob(
+        include = ["**/*"],
+        exclude = [
+            "BUILD.bazel",
+            "WORKSPACE",
+        ],
+    ),
+)
+"""
+
+_register_bzl = """
+def register_system_ruby():
+    native.register_toolchains("@{}//:toolchain")
+"""
+
+_mock_register_bzl = """
+def register_system_ruby():
+    print("WARNING: not registering any system ruby toolchain")
+"""
+
 def _install_ruby_version(ctx, version):
     ctx.download_and_extract(
         url = "https://github.com/rbenv/ruby-build/archive/refs/tags/v20220825.tar.gz",
@@ -138,34 +223,43 @@ def _ruby_runtime_impl(ctx):
     else:
         _install_ruby_version(ctx, version)
         interpreter_path = ctx.path("./build/bin/ruby")
+        if not interpreter_path or not interpreter_path.exists:
+            fail("Installation of ruby version %s failed")
 
-    if not interpreter_path or not interpreter_path.exists:
-        fail(
-            "Command 'ruby' not found. Set $PATH or specify interpreter_path",
-            "interpreter_path",
+    if interpreter_path and interpreter_path.exists:
+        ruby = ruby_repository_context(ctx, interpreter_path)
+        installed = _install_ruby(ctx, ruby)
+        ruby_impl, ruby_version = get_ruby_info(ctx, interpreter_path)
+        hdrs = ["%s/**/*.h" % path for path in installed.includedirs]
+        toolchain = _toolchain.format(
+            includes = repr(installed.includedirs),
+            hdrs = repr(["%s/**/*.h" % path for path in installed.includedirs]),
+            static_library = repr(installed.static_library),
+            shared_library = repr(installed.shared_library),
+            rules_ruby_workspace = RULES_RUBY_WORKSPACE_NAME,
+            version = ruby_version,
+            setting = "config_system" if version == "system" else "config_%s-%s" % (ruby_impl, ruby_version),
         )
-
-    ruby = ruby_repository_context(ctx, interpreter_path)
-
-    installed = _install_ruby(ctx, ruby)
-
-    ruby_impl, ruby_version = get_ruby_info(ctx, interpreter_path)
+        register_bzl = _register_bzl
+    else:
+        print("WARNING: no system ruby available, builds against system ruby will fail")
+        support = "none"
+        ruby_impl = "none"
+        toolchain = _mock_toolchain
+        register_bzl = _mock_register_bzl
+        ctx.file("ruby", content = "", executable = True)
 
     ctx.template(
         "BUILD.bazel",
         ctx.attr._buildfile_template,
         substitutions = {
-            "{includes}": repr(installed.includedirs),
-            "{hdrs}": repr(["%s/**/*.h" % path for path in installed.includedirs]),
-            "{static_library}": repr(installed.static_library),
-            "{shared_library}": repr(installed.shared_library),
-            "{rules_ruby_workspace}": RULES_RUBY_WORKSPACE_NAME,
+            "{toolchain}": toolchain,
             "{implementation}": ruby_impl,
-            "{version}": ruby_version,
-            "{setting}": "config_system" if version == "system" else "config_%s-%s" % (ruby_impl, ruby_version),
         },
         executable = False,
     )
+    if version == "system":
+        ctx.file("register.bzl", register_bzl)
 
 ruby_runtime = repository_rule(
     implementation = _ruby_runtime_impl,

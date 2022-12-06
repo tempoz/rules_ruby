@@ -68,7 +68,7 @@ selects.config_setting_group(
     name = "config_system_ruby",
     match_all = [
         ":config_system",
-        "//external:rules_ruby_system_jruby_implementation",
+        "//external:rules_ruby_system_ruby_implementation",
     ],
 )
 
@@ -88,6 +88,14 @@ selects.config_setting_group(
 
 selects.config_setting_group(
     name = "config_jruby",
-    match_any = [":config_system_ruby"] +
+    match_any = [":config_system_jruby"] +
                 [":config_%s" % v for v in ALL_JRUBY_MAJOR_MINOR_VERSIONS],
+)
+
+selects.config_setting_group(
+    name = "config_system_none",
+    match_all = [
+        ":config_system",
+        "//external:rules_ruby_system_no_implementation",
+    ],
 )
