@@ -236,7 +236,7 @@ def system_ruby_is_correct_version(ctx, version):
 def _ruby_runtime_impl(ctx):
     # If the current version of ruby is correct use that
     version = ctx.attr.version
-    if version == "system": # or system_ruby_is_correct_version(ctx, version):
+    if version == "system":  # or system_ruby_is_correct_version(ctx, version):
         interpreter_path = ctx.which("ruby")
     else:
         _install_ruby_version(ctx, version)
@@ -267,7 +267,7 @@ def _ruby_runtime_impl(ctx):
         support = "none"
         ruby_impl = "none"
         toolchain = _mock_toolchain.format(
-            rules_ruby_workspace = RULES_RUBY_WORKSPACE_NAME
+            rules_ruby_workspace = RULES_RUBY_WORKSPACE_NAME,
         )
         ctx.file("ruby", content = "", executable = True)
         bundle_bzl = _mock_bundle_bzl

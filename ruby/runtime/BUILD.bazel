@@ -40,7 +40,10 @@ _ruby_interpreter_alias(
 string_flag(
     name = "version",
     build_setting_default = "auto",
-    values = ["auto", "system"] + SUPPORTED_MAJOR_MINOR_VERSIONS,
+    values = [
+        "auto",
+        "system",
+    ] + SUPPORTED_MAJOR_MINOR_VERSIONS,
 )
 
 config_setting(
@@ -63,13 +66,19 @@ config_setting(
 
 selects.config_setting_group(
     name = "config_system",
-    match_any = [":config_auto", ":internal_config_system"],
+    match_any = [
+        ":config_auto",
+        ":internal_config_system",
+    ],
 )
 
 [
     selects.config_setting_group(
         name = "config_" + get_supported_version(version),
-        match_any = [":config_auto", ":internal_config_" + get_supported_version(version)],
+        match_any = [
+            ":config_auto",
+            ":internal_config_" + get_supported_version(version),
+        ],
     )
     for version in SUPPORTED_MAJOR_MINOR_VERSIONS
 ]

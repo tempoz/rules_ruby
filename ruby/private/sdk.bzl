@@ -1,5 +1,5 @@
 load("@rules_ruby//ruby/private/toolchains:ruby_runtime.bzl", "ruby_runtime")
-load(":constants.bzl", "get_supported_version", "RULES_RUBY_WORKSPACE_NAME")
+load(":constants.bzl", "RULES_RUBY_WORKSPACE_NAME", "get_supported_version")
 
 def _register_toolchain(version):
     """Registers ruby toolchains in the WORKSPACE file."""
