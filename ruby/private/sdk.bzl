@@ -14,7 +14,6 @@ def _register_toolchain(version):
         version = supported_version,
     )
 
-    # System toolchain may not exist, and must be registered in WORKSPACE.
     native.register_toolchains(
         "@%s//:toolchain" % name,
     )
