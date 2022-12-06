@@ -1,5 +1,5 @@
 load("@rules_ruby//ruby/private/toolchains:ruby_runtime.bzl", "ruby_runtime")
-load(":constants.bzl", "get_supported_version")
+load(":constants.bzl", "get_supported_version", "RULES_RUBY_WORKSPACE_NAME")
 
 def _register_toolchain(version):
     """Registers ruby toolchains in the WORKSPACE file."""
@@ -44,19 +44,34 @@ def rules_ruby_register_toolchains(versions = []):
     for version in versions:
         _register_toolchain(version)
 
-    native.bind(
-        name = "rules_ruby_system_jruby_implementation",
-        actual = "@local_config_ruby_system//:jruby_implementation",
-    )
-    native.bind(
-        name = "rules_ruby_system_ruby_implementation",
-        actual = "@local_config_ruby_system//:ruby_implementation",
-    )
-    native.bind(
-        name = "rules_ruby_system_no_implementation",
-        actual = "@local_config_ruby_system//:no_implementation",
-    )
-    native.bind(
-        name = "rules_ruby_system_interpreter",
-        actual = "@local_config_ruby_system//:ruby",
-    )
+    if not "system" in versions:
+        native.bind(
+            name = "rules_ruby_system_jruby_implementation",
+            actual = "%s//:missing_jruby_implementation" % RULES_RUBY_WORKSPACE_NAME,
+        )
+        native.bind(
+            name = "rules_ruby_system_ruby_implementation",
+            actual = "%s//:missing_ruby_implementation" % RULES_RUBY_WORKSPACE_NAME,
+        )
+        native.bind(
+            name = "rules_ruby_system_no_implementation",
+            actual = "%s//:missing_no_implementation" % RULES_RUBY_WORKSPACE_NAME,
+        )
+
+    else:
+        native.bind(
+            name = "rules_ruby_system_jruby_implementation",
+            actual = "@local_config_ruby_system//:jruby_implementation",
+        )
+        native.bind(
+            name = "rules_ruby_system_ruby_implementation",
+            actual = "@local_config_ruby_system//:ruby_implementation",
+        )
+        native.bind(
+            name = "rules_ruby_system_no_implementation",
+            actual = "@local_config_ruby_system//:no_implementation",
+        )
+        native.bind(
+            name = "rules_ruby_system_interpreter",
+            actual = "@local_config_ruby_system//:ruby",
+        )
