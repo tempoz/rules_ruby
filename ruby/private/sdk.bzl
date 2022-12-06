@@ -14,11 +14,10 @@ def _register_toolchain(version):
         version = supported_version,
     )
 
-    if version != "system":
-        # System toolchain may not exist, and must be registered in WORKSPACE.
-        native.register_toolchains(
-            "@%s//:toolchain" % name,
-        )
+    # System toolchain may not exist, and must be registered in WORKSPACE.
+    native.register_toolchains(
+        "@%s//:toolchain" % name,
+    )
 
 def rules_ruby_register_toolchains(versions = []):
     """Initializes ruby toolchains at different supported versions.
@@ -39,11 +38,6 @@ def rules_ruby_register_toolchains(versions = []):
     tests.  However, passing a flag such as:
         --@rules_ruby//ruby/runtime:version="ruby-2.5"
     will select the Ruby 2.5 installation.
-
-    Note: since the system toolchain may not exist, the following needs to be
-    called from WORKSPACE:
-        load("@local_config_ruby_system//:register.bzl", "register_system_ruby")
-        register_system_ruby()
 
     Args:
       versions: a list of version identifiers

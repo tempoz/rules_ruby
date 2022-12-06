@@ -2,6 +2,16 @@ load("//ruby/private:constants.bzl", "RULES_RUBY_WORKSPACE_NAME")
 load("//ruby/private/toolchains:repository_context.bzl", "ruby_repository_context")
 
 _mock_toolchain = """
+load(
+    "{rules_ruby_workspace}//ruby:defs.bzl",
+    "ruby_mock_toolchain",
+)
+
+ruby_mock_toolchain(
+    name = "toolchain",
+    rules_ruby_workspace = "{rules_ruby_workspace}",
+)
+
 sh_binary(
     name = "ruby_bin",
     srcs = ["ruby"],
@@ -74,16 +84,6 @@ filegroup(
         ],
     ),
 )
-"""
-
-_register_bzl = """
-def register_system_ruby():
-    native.register_toolchains("@{}//:toolchain")
-"""
-
-_mock_register_bzl = """
-def register_system_ruby():
-    print("WARNING: not registering any system ruby toolchain")
 """
 
 def _install_ruby_version(ctx, version):
@@ -240,13 +240,13 @@ def _ruby_runtime_impl(ctx):
             version = ruby_version,
             setting = "config_system" if version == "system" else "config_%s-%s" % (ruby_impl, ruby_version),
         )
-        register_bzl = _register_bzl.format(ctx.name)
     else:
         print("WARNING: no system ruby available, builds against system ruby will fail")
         support = "none"
         ruby_impl = "none"
-        toolchain = _mock_toolchain
-        register_bzl = _mock_register_bzl
+        toolchain = _mock_toolchain.format(
+            rules_ruby_workspace = RULES_RUBY_WORKSPACE_NAME
+        )
         ctx.file("ruby", content = "", executable = True)
 
     ctx.template(
@@ -258,8 +258,6 @@ def _ruby_runtime_impl(ctx):
         },
         executable = False,
     )
-    if version == "system":
-        ctx.file("register.bzl", register_bzl)
 
 ruby_runtime = repository_rule(
     implementation = _ruby_runtime_impl,

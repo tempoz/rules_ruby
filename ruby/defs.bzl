@@ -1,5 +1,6 @@
 load(
     "@rules_ruby//ruby/private:toolchain.bzl",
+    _mock_toolchain = "mock_ruby_toolchain",
     _toolchain = "ruby_toolchain",
 )
 load(
@@ -31,6 +32,7 @@ load(
     _gemspec = "gemspec",
 )
 
+ruby_mock_toolchain = _mock_toolchain
 ruby_toolchain = _toolchain
 ruby_library = _library
 ruby_binary = _binary
