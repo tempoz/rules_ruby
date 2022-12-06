@@ -64,7 +64,7 @@ def rules_ruby_register_toolchains(versions = []):
     )
     native.bind(
         name = "rules_ruby_system_no_implementation",
-        actual = "@local_config_ruby_system//:none",
+        actual = "@local_config_ruby_system//:no_implementation",
     )
     native.bind(
         name = "rules_ruby_system_interpreter",
