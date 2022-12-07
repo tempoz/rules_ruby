@@ -10,11 +10,18 @@ local_repository(
     path = "../..",
 )
 
-load("@rules_ruby//ruby:deps.bzl", "register_ruby_toolchain", "rules_ruby_dependencies")
+load("@rules_ruby//ruby:deps.bzl", "rules_ruby_dependencies")
 
 rules_ruby_dependencies()
 
-register_ruby_toolchain("ruby-2.7.1")
+load("@rules_ruby//ruby:defs.bzl", "ruby_runtime")
+
+ruby_runtime(
+    name = "ruby-2.7",
+    version = "ruby-2.7.1",
+)
+
+register_toolchains("@ruby-2.7//:toolchain")
 
 load("@ruby-2.7.1//:bundle.bzl", "ruby_bundle")
 

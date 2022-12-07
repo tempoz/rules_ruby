@@ -109,7 +109,7 @@ load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
 bazel_skylib_workspace()
 
 load("@rules_ruby//ruby:deps.bzl", "register_toolchain")
-register_toolchain("ruby-3.0")
+register_toolchains("ruby-3.0")
 
 #———————————————————————————————————————————————————————————————————————
 # Now, load the ruby_bundle rule & install gems specified in the Gemfile

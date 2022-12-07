@@ -12,13 +12,25 @@ load("@bazel_skylib//lib:versions.bzl", "versions")
 
 versions.check("3.4.1")
 
-load("@rules_ruby//ruby:deps.bzl", "register_ruby_toolchain")
+load("@rules_ruby//ruby:defs.bzl", "ruby_runtime")
 
-register_ruby_toolchain("system_ruby")
+ruby_runtime(
+    name = "system_ruby",
+    version = "system",
+)
 
-register_ruby_toolchain("ruby-3.0")
+register_toolchains("@system_ruby//:toolchain")
 
-register_ruby_toolchain("jruby-9.2")
+ruby_runtime(
+    name = "ruby-3.0",
+    version = "ruby-3.0",
+)
+
+register_toolchains("@ruby-3.0//:toolchain")
+
+ruby_runtime("jruby-9.2")
+
+register_toolchains("@jruby-9.2//:toolchain")
 
 local_repository(
     name = "rules_ruby_ruby_tests_testdata_another_workspace",

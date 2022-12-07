@@ -1,7 +1,7 @@
 load("@rules_ruby//ruby/private/toolchains:ruby_runtime.bzl", "ruby_runtime")
 load(":constants.bzl", "RULES_RUBY_WORKSPACE_NAME", "get_supported_version")
 
-def register_ruby_toolchain(name, version = None):
+def register_ruby_runtime(name, version = None):
     """Initializes a ruby toolchain at a specific version.
 
     A special version "system" or "system_ruby" will use whatever version of
@@ -13,7 +13,7 @@ def register_ruby_toolchain(name, version = None):
     downloaded and built for use by the toolchain.  Toolchain selection occurs
     based on the //ruby/runtime:version flag setting.
 
-    For example, `register_toolchain("ruby", "ruby-2.5")` will download and
+    For example, `register_toolchains("ruby", "ruby-2.5")` will download and
     build the latest supported version of Ruby 2.5.
     By default, the system ruby will be used for all Bazel build and
     tests.  However, passing a flag such as:
@@ -40,10 +40,6 @@ def register_ruby_toolchain(name, version = None):
     ruby_runtime(
         name = name,
         version = supported_version,
-    )
-
-    native.register_toolchains(
-        "@%s//:toolchain" % name,
     )
 
     if supported_version == "system":

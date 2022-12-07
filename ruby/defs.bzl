@@ -30,6 +30,10 @@ load(
     _gem = "gem",
     _gemspec = "gemspec",
 )
+load(
+    "@rules_ruby//ruby/private:sdk.bzl",
+    _register_ruby_runtime = "register_ruby_runtime",
+)
 
 ruby_mock_toolchain = _mock_toolchain
 ruby_toolchain = _toolchain
@@ -42,3 +46,4 @@ ruby_bundle_install = _bundle_install
 ruby_rubocop = _rubocop
 ruby_gemspec = _gemspec
 ruby_gem = _gem
+ruby_runtime = _register_ruby_runtime

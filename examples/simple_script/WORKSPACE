@@ -7,11 +7,15 @@ local_repository(
     path = "../..",
 )
 
-load("@rules_ruby//ruby:deps.bzl", "register_ruby_toolchain", "rules_ruby_dependencies")
+load("@rules_ruby//ruby:deps.bzl", "rules_ruby_dependencies")
 
 rules_ruby_dependencies()
 
-register_ruby_toolchain("ruby-3.0")
+load("@rules_ruby//ruby:defs.bzl", "ruby_runtime")
+
+ruby_runtime("ruby-3.0")
+
+register_toolchains("@ruby-3.0//:toolchain")
 
 load("@ruby-3.0//:bundle.bzl", "ruby_bundle")
 
