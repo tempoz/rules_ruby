@@ -12,13 +12,13 @@ load("@bazel_skylib//lib:versions.bzl", "versions")
 
 versions.check("3.4.1")
 
-load("@rules_ruby//ruby:deps.bzl", "rules_ruby_register_toolchains")
+load("@rules_ruby//ruby:deps.bzl", "register_ruby_toolchain")
 
-rules_ruby_register_toolchains([
-    "system",
-    "ruby-3.0",
-    "jruby-9.2",
-])
+register_ruby_toolchain("system_ruby")
+
+register_ruby_toolchain("ruby-3.0")
+
+register_ruby_toolchain("jruby-9.2")
 
 local_repository(
     name = "rules_ruby_ruby_tests_testdata_another_workspace",
@@ -101,9 +101,9 @@ container_pull(
     repository = "library/ruby",
 )
 
-load("@rules_ruby//ruby:defs.bzl", "system_ruby_bundle")
+load("@system_ruby//:bundle.bzl", "ruby_bundle")
 
-system_ruby_bundle(
+ruby_bundle(
     name = "bundle",
     bundler_version = "2.1.4",
     excludes = {

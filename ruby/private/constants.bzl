@@ -193,6 +193,6 @@ def get_supported_version(version):
             break
 
     if not supported_version:
-        fail("rules_ruby_register_toolchains: unsupported ruby version '%s' not in '%s'" % (version, SUPPORTED_VERSIONS))
+        fail("register_ruby_toolchain: unsupported ruby version '%s' not in '%s'" % (version, SUPPORTED_VERSIONS))
 
     return supported_version

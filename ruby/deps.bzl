@@ -5,8 +5,8 @@ load(
 )
 load(
     "@rules_ruby//ruby/private:sdk.bzl",
-    _rules_ruby_register_toolchains = "rules_ruby_register_toolchains",
+    _register_ruby_toolchain = "register_ruby_toolchain",
 )
 
 rules_ruby_dependencies = _rules_ruby_dependencies
-rules_ruby_register_toolchains = _rules_ruby_register_toolchains
+register_ruby_toolchain = _register_ruby_toolchain
