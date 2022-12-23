@@ -14,6 +14,9 @@
 # setup will re-install it.
 # —————————————————————————————————————————————————————————————————————————————————————
 
+set -ex
+
+export BASHMATIC_OS="$(uname -s | tr '[:upper:]' '[:lower:]')"
 source "bin/deps"
 
 #—————————————————————————————————————————————————————————————————————————————————————————————————————————————
@@ -115,9 +118,11 @@ setup.git-hook() {
 }
 
 setup.os-specific() {
-  local os="$(uname -s | tr '[:upper:]' '[:lower:]')"
+  local os="${BASHMATIC_OS}"
   local setup_script
   setup_script="./bin/setup-${os}"
+  echo "UNAME: $(which uname) $(uname) $(uname -s) $(uname -m)"
+  echo "OS: ${os} ${setup_script}"
 
   if [[ -x "${setup_script}" ]]; then
     set -e
@@ -132,6 +137,8 @@ setup.os-specific() {
       /usr/bin/env bash bin/show-env || true
     fi
   else
+    echo "Not executable:"
+    ls -l "${setup_script}"
     error "Operating system ${os} is not currently supported." >&2
     return 1
   fi
