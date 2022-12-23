@@ -155,13 +155,15 @@ test.buildifier() {
 
 # Builds and runs workspace inside examples/simple_script
 test.simple-script() {
+  # This workspace requires a version specification
+  local RUBY_VERSION="--@rules_ruby//ruby/runtime:version=ruby-3.0 "
   __test.exec simple-script "
     cd examples/simple_script
     bazel ${BAZEL_OPTS} info;                                                  echo; echo
-    bazel ${BAZEL_OPTS} build ${BAZEL_BASE_BUILD_OPTS} -- //... ;                   echo; echo
-    bazel ${BAZEL_OPTS} test ${BAZEL_BASE_BUILD_OPTS} ${BAZEL_TEST_OPTS} -- //... ; echo; echo
-    echo run :bin;        bazel ${BAZEL_OPTS} run ${BAZEL_BASE_BUILD_OPTS} :bin
-    echo run :rubocop;    bazel ${BAZEL_OPTS} run ${BAZEL_BASE_BUILD_OPTS} :rubocop
+    bazel ${BAZEL_OPTS} build ${BAZEL_BASE_BUILD_OPTS} ${RUBY_VERSION} -- //... ;                   echo; echo
+    bazel ${BAZEL_OPTS} test ${BAZEL_BASE_BUILD_OPTS} ${BAZEL_TEST_OPTS}  ${RUBY_VERSION} -- //... ; echo; echo
+    echo run :bin;        bazel ${BAZEL_OPTS} run ${BAZEL_BASE_BUILD_OPTS} ${RUBY_VERSION} :bin
+    echo run :rubocop;    bazel ${BAZEL_OPTS} run ${BAZEL_BASE_BUILD_OPTS} ${RUBY_VERSION} :rubocop
   "
 }
 
