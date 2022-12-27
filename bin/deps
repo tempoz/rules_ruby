@@ -12,7 +12,7 @@
 
 export BASHMATIC_OS="$(uname -s | tr '[:upper:]' '[:lower:]')"
 [[ -z ${BASHMATIC_HOME} ]] && export BASHMATIC_HOME="${HOME}/.bashmatic"
-[[ -d ${BASHMATIC_HOME} ]] || bash -c "$(curl -fsSL https://bashmatic.re1.re); bashmatic-install -v -f -b v2.7.2"
+[[ -d ${BASHMATIC_HOME} ]] || bash -c "$(curl -fsSL https://raw.githubusercontent.com/kigster/bashmatic/master/bin/bashmatic-install); bashmatic-install -v -f -b v2.7.2"
 
 # shellcheck disable=SC1090
 source "${BASHMATIC_HOME}/init.sh" 1>/dev/null 2>&1
