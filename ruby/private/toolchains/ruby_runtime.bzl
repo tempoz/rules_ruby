@@ -30,7 +30,7 @@ cc_library(
 )
 
 java_binary(
-    name = "dummy_jar"
+    name = "dummy_jar",
     srcs = ["Dummy.java"],
 )
 
