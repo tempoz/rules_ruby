@@ -331,4 +331,9 @@ ruby_runtime = repository_rule(
             allow_single_file = True,
         ),
     },
+    # Force a re-fetch when the Ruby version is changed through RVM.
+    # This will also force a re-download when PATH changes, which is
+    # unnecessary.  To fix this, we may want to make system_ruby()
+    # a different repository rule from ruby_runtime().
+    environ = ["PATH"],
 )
