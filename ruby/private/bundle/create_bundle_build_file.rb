@@ -198,10 +198,10 @@ class BundleBuildFileGenerator
     # what Ruby uses in the PATH to gems, eg. ruby 2.6.5 would have a folder called
     # ruby/2.6.0/gems for all minor versions of 2.6.*
     @ruby_version ||= begin
-        if File.exist?("{RbConfig::CONFIG['rubylibdir']}")
+        if File.exist?(RbConfig::CONFIG['rubylibdir'])
             RbConfig::CONFIG['ruby_version']
         else
-          raise "Cannot find directory named {RbConfig::CONFIG['rubylibdir']}"
+          raise "Cannot find directory named #{RbConfig::CONFIG['rubylibdir']}"
         end
     end
   end
