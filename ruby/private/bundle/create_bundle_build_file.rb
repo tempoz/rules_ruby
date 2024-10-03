@@ -70,7 +70,7 @@ ALL_GEMS
 GEM_PATH = ->(ruby_version, gem_name, gem_version) do
   glob = Dir.glob("lib/#{RbConfig::CONFIG['RUBY_BASE_NAME']}/#{ruby_version}/gems/#{gem_name}-#{gem_version}*").first
   alt_glob = Dir.glob("lib/#{RbConfig::CONFIG['RUBY_BASE_NAME']}/#{ruby_version}/bundler/gems/#{gem_name}-*").first
-  glob || alt_glob # || alt_alt_glob
+  glob || alt_glob
 end
 
 # For ordinary gems, this path is like 'lib/ruby/3.0.0/specifications/rspec-3.10.0.gemspec'.
@@ -85,7 +85,7 @@ end
 SPEC_PATH = ->(ruby_version, gem_name, gem_version) do
   glob = Dir.glob("lib/#{RbConfig::CONFIG['RUBY_BASE_NAME']}/#{ruby_version}/specifications/#{gem_name}-#{gem_version}*.gemspec").first
   alt_glob = Dir.glob("lib/#{RbConfig::CONFIG['RUBY_BASE_NAME']}/#{ruby_version}/bundler/gems/#{gem_name}-*/**/*.gemspec").first
-  glob || alt_glob # || alt_alt_glob
+  glob || alt_glob
 end
 
 HERE = File.absolute_path '.'
