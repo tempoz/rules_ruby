@@ -70,7 +70,6 @@ ALL_GEMS
 GEM_PATH = ->(ruby_version, gem_name, gem_version) do
   glob = Dir.glob("lib/#{RbConfig::CONFIG['RUBY_BASE_NAME']}/#{ruby_version}/gems/#{gem_name}-#{gem_version}*").first
   alt_glob = Dir.glob("lib/#{RbConfig::CONFIG['RUBY_BASE_NAME']}/#{ruby_version}/bundler/gems/#{gem_name}-*").first
-  # alt_alt_glob = Dir.glob("lib/#{RbConfig::CONFIG['RUBY_BASE_NAME']}/gems/#{ruby_version}/gems/#{gem_name}-#{gem_version}*").first
   glob || alt_glob # || alt_alt_glob
 end
 
@@ -86,7 +85,6 @@ end
 SPEC_PATH = ->(ruby_version, gem_name, gem_version) do
   glob = Dir.glob("lib/#{RbConfig::CONFIG['RUBY_BASE_NAME']}/#{ruby_version}/specifications/#{gem_name}-#{gem_version}*.gemspec").first
   alt_glob = Dir.glob("lib/#{RbConfig::CONFIG['RUBY_BASE_NAME']}/#{ruby_version}/bundler/gems/#{gem_name}-*/**/*.gemspec").first
-  # alt_alt_glob = Dir.glob("lib/#{RbConfig::CONFIG['RUBY_BASE_NAME']}/gems/#{ruby_version}/specifications/#{gem_name}-#{gem_version}*.gemspec").first
   glob || alt_glob # || alt_alt_glob
 end
 
